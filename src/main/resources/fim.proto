@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package com.yytxdy.fim.protocol;
+message Protocol {
+    enum DataType {
+        HeartbeatRequestType = 0;
+        HeartbeatResponseType = 1;
+        LoginRequestType = 2;
+        LoginResponseType = 3;
+    }
+    DataType dataType = 1;
+    oneof dataBody {
+        HeartbeatRequest heartbeatRequest = 2;
+        HeartbeatResponse heartbeatResponse = 3;
+        LoginRequest loginRequest = 4;
+        LoginResponse loginResponse = 5;
+    }
+}
+message HeartbeatRequest {
+    bool syncMessage = 1;
+}
+message HeartbeatResponse {
+    bool syncMessage = 1;
+    repeated int64 messageId = 2;
+}
+message LoginRequest {
+    int64 userId = 1;
+    string token = 2;
+}
+message LoginResponse {
+    bool success = 1;
+    string errorCode = 2;
+    string errorMessage = 3;
+    repeated int64 messageId = 4;
+}
+message SendMessageRequest {
+    int64 senderId = 1;
+    int64 receiverId  =2;
+    int32 messageType = 3;
+    string content = 4;
+}
+message SendMessageResponse {
+    bool success = 1;
+    string errorCode = 2;
+    string errorMessage = 3;
+    int64 messageId = 4;
+}
+message NotifyRequest {
+    int64 senderId = 1;
+    int64 messageId = 2;
+    int32 messageType = 3;
+    string content = 4;
+}
+enum NotifyType {
+    singleMessage = 0;
+    multiMessage = 1;
+}
+message NotifyResponse {
+    NotifyType notifyType = 1;
+    int64 messageId = 2;
+}
+message ReadReceiptRequest {
+    int32 senderId = 1;
+    int64 maxMessageId = 2;
+}
