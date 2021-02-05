@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+//option java_multiple_files = true;
 package com.yytxdy.fim.protocol;
 message Protocol {
     enum DataType {
@@ -7,6 +7,11 @@ message Protocol {
         HeartbeatResponseType = 1;
         LoginRequestType = 2;
         LoginResponseType = 3;
+        SendMessageRequestType = 4;
+        SendMessageResponseType = 5;
+        NotifyRequestType = 6;
+        NotifyResponseType = 7;
+        ReadReceiptRequestType = 8;
     }
     DataType dataType = 1;
     oneof dataBody {
@@ -14,13 +19,18 @@ message Protocol {
         HeartbeatResponse heartbeatResponse = 3;
         LoginRequest loginRequest = 4;
         LoginResponse loginResponse = 5;
+        SendMessageRequest sendMessageRequest = 6;
+        SendMessageResponse sendMessageResponse = 7;
+        NotifyRequest notifyRequest = 8;
+        NotifyResponse notifyResponse = 9;
+        ReadReceiptRequest readReceiptRequest = 10;
     }
 }
 message HeartbeatRequest {
+    int64 userId = 2;
     bool syncMessage = 1;
 }
 message HeartbeatResponse {
-    bool syncMessage = 1;
     repeated int64 messageId = 2;
 }
 message LoginRequest {
@@ -35,7 +45,7 @@ message LoginResponse {
 }
 message SendMessageRequest {
     int64 senderId = 1;
-    int64 receiverId  =2;
+    int64 receiverId = 2;
     int32 messageType = 3;
     string content = 4;
 }
@@ -47,19 +57,21 @@ message SendMessageResponse {
 }
 message NotifyRequest {
     int64 senderId = 1;
-    int64 messageId = 2;
-    int32 messageType = 3;
-    string content = 4;
-}
-enum NotifyType {
-    singleMessage = 0;
-    multiMessage = 1;
+    int64 receiverId = 2;
+    int64 messageId = 3;
+    int32 messageType = 4;
+    string content = 5;
 }
 message NotifyResponse {
-    NotifyType notifyType = 1;
-    int64 messageId = 2;
+    int64 receiverId = 2;
+    int64 messageId = 3;
 }
 message ReadReceiptRequest {
     int32 senderId = 1;
     int64 maxMessageId = 2;
+}
+message Empty {
+}
+service NotifyReceiver {
+    rpc receive (NotifyRequest) returns (Empty);
 }
