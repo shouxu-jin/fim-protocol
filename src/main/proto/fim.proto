@@ -43,10 +43,13 @@ message LoginResponse {
     string errorMessage = 3;
     repeated int64 messageId = 4;
 }
+enum MessageType {
+    text = 0;
+}
 message SendMessageRequest {
     int64 senderId = 1;
     int64 receiverId = 2;
-    int32 messageType = 3;
+    MessageType messageType = 3;
     string content = 4;
 }
 message SendMessageResponse {
@@ -59,7 +62,7 @@ message NotifyRequest {
     int64 senderId = 1;
     int64 receiverId = 2;
     int64 messageId = 3;
-    int32 messageType = 4;
+    MessageType messageType = 4;
     string content = 5;
 }
 message NotifyResponse {
